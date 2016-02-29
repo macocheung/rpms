@@ -1,6 +1,8 @@
 # Asterisk RPM Spec
 
-This directory contains a SPEC and some other supporting files for building RPM packages for Asterisk.  The process I follow is below.  YMMV!
+This directory contains a SPEC and some other supporting files for building RPM packages for Asterisk.  The process I follow is below followed by some notes on what customizations I've included.
+
+## Building the RPM
 
 Start with a physical or virtual machine with at least 2 CPUs, 2GB RAM, 10G drive, and an Ethernet LAN interface.
 
@@ -48,4 +50,10 @@ Install them:
 ```
 
 That should do it!
---Paul
+
+## Customizations
+
+* I've added a number of `BuildRequires` entries to `asterisk.spec` in order to enable almost all of the optional modules with in Asterisk.  I've not enabled Dahdi or other components that rely on hardare and kernel-specific drivers since I want to be able to use the resulting packages on both virtual and physical machines. 
+* I like to keep my custom sound files separate from those included in the distribution so I've added the `/var/lib/asterisk/sounds/custom/' directory where I keep them instead.
+* I use the `phoneprov` feature to provision Polycom phones so that content is included.  I don't expose the HTTP interface directly instead proxying it through a local Apache instance.  
+

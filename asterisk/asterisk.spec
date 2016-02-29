@@ -1,6 +1,4 @@
 # $Id$
-# Authority: pdugas
-
 # https://github.com/pdugas/rpms/master/asterisk/asterisk.spec
 
 Name:		asterisk
@@ -11,7 +9,6 @@ Group:		System/Telephony
 Packager:	Paul Dugas <paul@dugas.cc>
 URL:		http://www.asterisk.org
 License:	GPL
-BuildRoot:	%{_tmppath}/%{name}-%{version}-root
 
 Source0:	http://downloads.digium.com/pub/asterisk/releases/asterisk-%{version}.tar.gz
 Source1:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-en-ulaw-current.tar.gz
@@ -21,6 +18,7 @@ Source4:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-extra-sound
 Source5:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound-ulaw-current.tar.gz
 Source6:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound-g722-current.tar.gz
 Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.service
+Source8:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/sounds.custom.README
 
 BuildRequires:	bison
 BuildRequires:	curl-devel
@@ -83,6 +81,38 @@ Asterisk is sponsored by Digium.  See http://asterisk.org/.
 
 This package contains static libraries and header files need for development.
 
+%package sounds-en-ulaw
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-ulaw
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using μ-law (G.711).
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+
+%package sounds-en-g722
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-g722
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using G.722.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+
 %prep
 %setup -q
 
@@ -100,13 +130,16 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install install-logrotate basic-pbx
+%make_install install-logrotate samples 
 %{__mkdir} -p %{buildroot}%{_unitdir}/
 %{__install} -D -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
-%{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds
-%{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds
-%{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds
-%{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom
+%{__install} -D -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
 %{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh
 %{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh
 
@@ -121,9 +154,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root)
-%doc CREDITS LICENSE
+%doc CREDITS LICENSE README README-addons.txt
+%doc README-SERIOUSLY.bestpractices.txt UPGRADE.txt
+%doc asterisk-%{version}-summary.txt BUGS ChangeLog
 %dir %{_sysconfdir}/asterisk/
-%doc %{_sysconfdir}/asterisk/README
 %config(noreplace) %{_sysconfdir}/asterisk/*.conf
 %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
 %{_libdir}/libasteriskssl.so.*
@@ -134,30 +168,67 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/*
 %{_unitdir}/asterisk.service
 %dir %{_localstatedir}/lib/asterisk/
+%dir %{_localstatedir}/lib/asterisk/agi-bin
+#%{_localstatedir}/lib/asterisk/agi-bin/*
+%dir %{_localstatedir}/lib/asterisk/documentation
+%{_localstatedir}/lib/asterisk/documentation/*
+%dir %{_localstatedir}/lib/asterisk/firmware
+%{_localstatedir}/lib/asterisk/firmware/*
+%dir %{_localstatedir}/lib/asterisk/images
+%{_localstatedir}/lib/asterisk/images/*
+%dir %{_localstatedir}/lib/asterisk/keys
+#%{_localstatedir}/lib/asterisk/keys/*
 %dir %{_localstatedir}/lib/asterisk/moh
+%dir %{_localstatedir}/lib/asterisk/phoneprov
+%config(noreplace) %{_localstatedir}/lib/asterisk/phoneprov/*
+%dir %{_localstatedir}/lib/asterisk/rest-api
+%{_localstatedir}/lib/asterisk/rest-api/*
 %dir %{_localstatedir}/lib/asterisk/sounds
-%{_localstatedir}/lib/asterisk/*
+%dir %{_localstatedir}/lib/asterisk/sounds/custom
+%doc %{_localstatedir}/lib/asterisk/sounds/custom/README
+%dir %{_localstatedir}/lib/asterisk/sounds/en
+%dir %{_localstatedir}/lib/asterisk/sounds/en/dictate
+%dir %{_localstatedir}/lib/asterisk/sounds/en/digits
+%dir %{_localstatedir}/lib/asterisk/sounds/en/followme
+%dir %{_localstatedir}/lib/asterisk/sounds/en/letters
+%dir %{_localstatedir}/lib/asterisk/sounds/en/phonetic
+%dir %{_localstatedir}/lib/asterisk/sounds/en/silence
+%dir %{_localstatedir}/lib/asterisk/sounds/en/ha
+%dir %{_localstatedir}/lib/asterisk/sounds/en/wx
+%dir %{_localstatedir}/lib/asterisk/static-http
+%{_localstatedir}/lib/asterisk/static-http/*
 %dir %{_localstatedir}/log/asterisk/
-#%ghost %{_localstatedir}/log/asterisk/*
+%ghost %{_localstatedir}/log/asterisk/debug
+%ghost %{_localstatedir}/log/asterisk/security
+%ghost %{_localstatedir}/log/asterisk/console
+%ghost %{_localstatedir}/log/asterisk/messages
+%ghost %{_localstatedir}/log/asterisk/full
 %dir %{_localstatedir}/log/asterisk/cdr-csv/
-#%ghost %{_localstatedir}/log/asterisk/cdr-csv/*
+%ghost %{_localstatedir}/log/asterisk/cdr-csv/Master.csv
 %dir %{_localstatedir}/log/asterisk/cdr-custom/
-#%ghost %{_localstatedir}/log/asterisk/cdr-custom/*
 %dir %{_localstatedir}/log/asterisk/cel-custom/
-#%ghost %{_localstatedir}/log/asterisk/cel-custom/*
 %dir %{_localstatedir}/run/asterisk/
-#%ghost %{_localstatedir}/run/asterisk/*
+%ghost %{_localstatedir}/run/asterisk/asterisk.ctl
+%ghost %{_localstatedir}/run/asterisk/asterisk.pid
 %dir %{_localstatedir}/spool/asterisk/
 %{_localstatedir}/spool/asterisk/*
 
 %files devel
 %defattr(-,root,root)
-%doc BUGS ChangeLog README
-%doc doc/api/html/*
 %{_includedir}/asterisk.h
 %dir %{_includedir}/asterisk
 %{_includedir}/asterisk/*
 %{_libdir}/libasteriskssl.so
+
+%files sounds-en-ulaw
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/sounds/en/*ulaw
+%{_localstatedir}/lib/asterisk/sounds/en/*/*ulaw
+
+%files sounds-en-g722
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/sounds/en/*g722
+%{_localstatedir}/lib/asterisk/sounds/en/*/*g722
 
 %changelog
 * Mon Feb 29 2016 Paul Dugas <paul@dugas.cc> 13.7.2-1

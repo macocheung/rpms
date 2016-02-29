@@ -1,0 +1,4 @@
+Place any custom sound files here or in subdirectories.  Play then back using something like
+
+    same => n,Playback(/var/lib/asterisk/sounds/custom/whatever)
+

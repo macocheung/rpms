@@ -130,25 +130,18 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install install-logrotate basic-pbx 
+%make_install install-logrotate samples 
 %{__mkdir} -p %{buildroot}%{_unitdir}/
 %{__install} -D -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom
 %{__install} -D -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__mkdir} -p %{buildroot}%{_datarootdir}/doc/asterisk-${version}/configs/
-for x in configs/samples/*; do \
-  %{__install} -m 644 "$x" %{buildroot}%{_datarootdir}/doc/asterisk-${version}/configs/
-done
-for x in phoneprov/*; do \
-  %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov
-done
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en
+%{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh
+%{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh
 
 %post
 %systemd_post asterisk.service
@@ -165,8 +158,12 @@ done
 %doc README-SERIOUSLY.bestpractices.txt UPGRADE.txt
 %doc asterisk-%{version}-summary.txt BUGS ChangeLog
 %dir %{_sysconfdir}/asterisk/
-%doc %{_sysconfdir}/asterisk/README
 %config(noreplace) %{_sysconfdir}/asterisk/*.conf
+%config(noreplace) %{_sysconfdir}/asterisk/asterisk.adsi
+%config(noreplace) %{_sysconfdir}/asterisk/telcordia-1.adsi
+%config(noreplace) %{_sysconfdir}/asterisk/extensions.ael
+%config(noreplace) %{_sysconfdir}/asterisk/extensions.lua
+%config(noreplace) %{_sysconfdir}/asterisk/ss7.timers
 %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
 %{_libdir}/libasteriskssl.so.*
 %dir %{_libdir}/asterisk/

@@ -45,8 +45,17 @@ Now build RPMs:
 
 Install them:
 ```
-[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/asterisk-13.7.2.rpm
-[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/asterisk-sounds-*.rpm
+[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-13.7.2.rpm
+[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-sounds-*.rpm
+```
+
+Enable and Start Asterisk and open the firewall:
+```
+[root@pbx]# systemctl enable asterisk
+[root@pbx]# systemctl start asterisk
+[root@pbx]# firewall-cmd --zone=public --add-port=5060-5061/udp --permanent 
+[root@pbx]# firewall-cmd --zone=public --add-port=10000-20000/udp --permanent 
+[root@pbx]# firewall-cmd --reload
 ```
 
 That should do it!
@@ -56,4 +65,7 @@ That should do it!
 * I've added a number of `BuildRequires` entries to `asterisk.spec` in order to enable almost all of the optional modules with in Asterisk.  I've not enabled Dahdi or other components that rely on hardare and kernel-specific drivers since I want to be able to use the resulting packages on both virtual and physical machines. 
 * I like to keep my custom sound files separate from those included in the distribution so I've added the `/var/lib/asterisk/sounds/custom/' directory where I keep them instead.
 * I use the `phoneprov` feature to provision Polycom phones so that content is included.  I don't expose the HTTP interface directly instead proxying it through a local Apache instance.  
+* I don't install the sound files via the stock build system.  Instead, I list them as sources in `asterisk.spec` so they're downloaded with the Asterisk source.  Helps when I'm rebuilding often as I don't need to redownload them every time.  There looks to be support for a caching scheme in the makefile but I'm not seeing how to use it.
+* I install the `basic-pbx` configs into `/etc/asterisk/` and include the samples in `/usr/share/doc/asterisk-*/configs/`.
+
 

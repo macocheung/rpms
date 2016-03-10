@@ -94,14 +94,9 @@ svr1*CLI>
 * I like to keep my custom sound files separate from those included in the
   distribution so I've added the _/var/lib/asterisk/sounds/custom/_ directory
   where I keep them instead.
-* I use the _phoneprov_ feature to provision Polycom phones so that content is
-  included.  I don't expose the HTTP interface directly instead proxying it
-  through a local Apache instance.  
 * I don't install the sound files via the stock build system.  Instead, I list
   them as sources in _asterisk.spec_ so they're downloaded with the Asterisk
   source.  Helps when I'm rebuilding often as I don't need to redownload them
   every time.  There looks to be support for a caching scheme in the makefile but
   I'm not seeing how to use it.
-* I install the _basic-pbx_ configs into _/etc/asterisk/_ and include the
-  samples in _/usr/share/doc/asterisk-*/configs/_.
 

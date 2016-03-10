@@ -130,7 +130,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install install-logrotate basic-pbx 
+%make_install install-logrotate samples
 %{__mkdir} -p %{buildroot}%{_unitdir}/
 %{__install} -D -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
 %{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/
@@ -142,10 +142,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
 %{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__mkdir} -p %{buildroot}%{_datarootdir}/doc/asterisk-%{version}/configs/
-for x in configs/samples/*; do \
-  %{__install} -m 644 "$x" %{buildroot}%{_datarootdir}/doc/asterisk-%{version}/configs/
-done
 for x in phoneprov/*; do \
   %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov
 done
@@ -165,8 +161,7 @@ done
 %doc README-SERIOUSLY.bestpractices.txt UPGRADE.txt
 %doc asterisk-%{version}-summary.txt BUGS ChangeLog
 %dir %{_sysconfdir}/asterisk/
-%doc %{_sysconfdir}/asterisk/README
-%config(noreplace) %{_sysconfdir}/asterisk/*.conf
+%config(noreplace) %{_sysconfdir}/asterisk/*
 %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
 %{_libdir}/libasteriskssl.so.*
 %dir %{_libdir}/asterisk/

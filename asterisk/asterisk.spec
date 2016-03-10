@@ -142,9 +142,9 @@ rm -rf $RPM_BUILD_ROOT
 %{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
 %{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__mkdir} -p %{buildroot}%{_datarootdir}/doc/asterisk-${version}/configs/
+%{__mkdir} -p %{buildroot}%{_datarootdir}/doc/asterisk-%{version}/configs/
 for x in configs/samples/*; do \
-  %{__install} -m 644 "$x" %{buildroot}%{_datarootdir}/doc/asterisk-${version}/configs/
+  %{__install} -m 644 "$x" %{buildroot}%{_datarootdir}/doc/asterisk-%{version}/configs/
 done
 for x in phoneprov/*; do \
   %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov

@@ -51,7 +51,7 @@ Now build the RPMs:
 
 Install them:
 ```
-[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-13.7.2.rpm
+[root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-13.7.2-*.rpm
 [root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-sounds-*.rpm
 ```
 
@@ -70,7 +70,19 @@ Allow SIP/SIPS and RTP through the firewall:
 
 That should do it.  Now adjust the configs in _/etc/asterisk/_.  Pull samples
 from _/usr/share/doc/asterisk-*/configs/_ for other config files not installed
-already.
+already.  Get to the console like so:
+```
+[root@pbx]# asterisk -rvvv
+Asterisk 13.7.2, Copyright (C) 1999 - 2014, Digium, Inc. and others.
+Created by Mark Spencer <markster@digium.com>
+Asterisk comes with ABSOLUTELY NO WARRANTY; type 'core show warranty' for details.
+This is free software, with components licensed under the GNU General Public
+License version 2 and other licenses; you are welcome to redistribute it under
+certain conditions. Type 'core show license' for details.
+=========================================================================
+Connected to Asterisk 13.7.2 currently running on svr1 (pid = 13253)
+svr1*CLI> 
+```
 
 ## Customizations
 

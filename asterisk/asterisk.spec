@@ -402,6 +402,8 @@ exit 0
 
 %postun
 %systemd_postun_with_restart asterisk.service
+# Per https://fedoraproject.org/wiki/Packaging:UsersAndGroups#Allocation_Strategies,
+# we don't delete the user/ group created in %pre. Let the sysadmin hanfle it.
 
 %files
 %defattr(-,root,root)

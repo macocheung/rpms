@@ -130,5 +130,3 @@ svr1*CLI>
 * __systemd Support__ - We include a service definition to start/stop Asterisk
   using systemd since this is the standard for Redhat these days.
 
---
-Paul Dugas <paul@dugas.cc>

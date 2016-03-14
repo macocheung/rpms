@@ -174,7 +174,7 @@ done
 %{__install} -Dp -m 644 %{SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
 %{__install} -Dp -m 644 %{SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
 %{__install} -Dp -m 644 %{SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
-%{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/
+%{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/samples/
 for x in configs/samples/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/$x"
 done

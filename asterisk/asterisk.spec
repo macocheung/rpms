@@ -181,10 +181,10 @@ for x in configs/samples/*; do \
 done
 
 %pre
-getent group ${name} >/dev/null || groupadd -r ${name}
-getent passwd ${name} >/dev/null || \
-    useradd -r -g ${name} -d %{_localstatedir}/lib/asterisk -s /sbin/nologin \
-    -c "Asterisk PBX" ${name}
+getent group ${gname} >/dev/null || groupadd -r ${gname}
+getent passwd $au{name} >/dev/null || \
+    useradd -r -g ${gname} -d %{_localstatedir}/lib/asterisk -s /sbin/nologin \
+    -c "Asterisk PBX" ${uname}
 exit 0
 
 %post
@@ -215,16 +215,15 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %{_mandir}/man8/*
 %{_unitdir}/asterisk.service
 %attr(-  , %{uname}, %{gname}) %dir %{_localstatedir}/lib/asterisk/
+%ghost %{_localstatedir}/lib/asterisk/astdb.sqlite3
 %dir %{_localstatedir}/lib/asterisk/agi-bin
-#%{_localstatedir}/lib/asterisk/agi-bin/*
 %dir %{_localstatedir}/lib/asterisk/documentation
 %{_localstatedir}/lib/asterisk/documentation/*
 %dir %{_localstatedir}/lib/asterisk/firmware
-%{_localstatedir}/lib/asterisk/firmware/*
+%dir %{_localstatedir}/lib/asterisk/firmware/iax
 %dir %{_localstatedir}/lib/asterisk/images
 %{_localstatedir}/lib/asterisk/images/*
 %dir %{_localstatedir}/lib/asterisk/keys
-#%{_localstatedir}/lib/asterisk/keys/*
 %dir %{_localstatedir}/lib/asterisk/moh
 %dir %{_localstatedir}/lib/asterisk/phoneprov
 %dir %{_localstatedir}/lib/asterisk/phoneprov/configs
@@ -259,6 +258,7 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/run/asterisk/
 %attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/spool/asterisk/
 %{_localstatedir}/spool/asterisk/*
+%{_localstatedir}/www/html/favicon.ico
 
 %files devel
 %defattr(-,root,root)

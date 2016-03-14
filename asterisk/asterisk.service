@@ -1,3 +1,14 @@
+# -----------------------------------------------------------------------------
+# ASTERISK-RPM - RPMs for Asterisk
+# Copyright (C) 2016 Paul Dugas.  All rights reserved.
+# -----------------------------------------------------------------------------
+# Package   RPMS
+# File      asterisk/asterisk.service
+# Brief     systemd unit file for Asterisk
+# Author    Paul Dugas <paul@dugas.cc>
+# URL       https://github.com/pdugas/rpms/tree/master/asterisk
+# -----------------------------------------------------------------------------
+
 [Unit]
 Description=Asterisk PBX
 Documentation=man:asterisk(8)
@@ -18,3 +29,6 @@ RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
+
+# -----------------------------------------------------------------------------
+# EOF

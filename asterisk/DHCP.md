@@ -12,7 +12,6 @@ Directory in the office so we use Microsoft's DHCP server as described below.
 4.  Specify which clients the policy applies to on the _Conditions_ tab.
 
     ![DHCP-Conditions][DHCP-Conditions]
-
 5.  Set the options to send on the _Options_ tab.
    
     ![DHCP-Options][DHCP-Options]

@@ -94,9 +94,9 @@ carriers and government agencies, worldwide. Asterisk is free and open source.
 Asterisk is sponsored by Digium.  See http://asterisk.org/.
 
 %package devel
-Summary:       Development files for the Asterisk software PBX
-Group:         Development/Libraries
-Requires:      %{name} = %{version}-%{release}
+Summary:	Development files for the Asterisk software PBX
+Group:		Development/Libraries
+Requires:	%{name} = %{version}-%{release}
 
 %description devel
 Asterisk is an open source framework for building communications applications.
@@ -110,9 +110,10 @@ This package contains static libraries and header files need for development.
 
 %if "%{with_wav}" == "1"
 %package sounds-en-wav
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-wav
 Asterisk is an open source framework for building communications applications.
@@ -128,9 +129,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_ulaw}" == "1"
 %package sounds-en-ulaw
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-ulaw
 Asterisk is an open source framework for building communications applications.
@@ -146,9 +148,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_alaw}" == "1"
 %package sounds-en-alaw
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-alaw
 Asterisk is an open source framework for building communications applications.
@@ -164,9 +167,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_gsm}" == "1"
 %package sounds-en-gsm
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-gsm
 Asterisk is an open source framework for building communications applications.
@@ -182,9 +186,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_g722}" == "1"
 %package sounds-en-g722
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-g722
 Asterisk is an open source framework for building communications applications.
@@ -200,9 +205,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_g729}" == "1"
 %package sounds-en-g729
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-g729
 Asterisk is an open source framework for building communications applications.
@@ -218,9 +224,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_sln16}" == "1"
 %package sounds-en-sln16
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-sln16
 Asterisk is an open source framework for building communications applications.
@@ -236,9 +243,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_siren7}" == "1"
 %package sounds-en-siren7
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-siren7
 Asterisk is an open source framework for building communications applications.
@@ -254,9 +262,10 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 
 %if "%{with_siren14}" == "1"
 %package sounds-en-siren14
-Summary:       Sound files for the Asterisk software PBX
-Group:         System/Telephony
-Requires:      %{name} = %{version}-%{release}
+Summary:	Sound files for the Asterisk software PBX
+Group:		System/Telephony
+BuildArch:	noarch
+Requires:	%{name} = %{version}-%{release}
 
 %description sounds-en-siren14
 Asterisk is an open source framework for building communications applications.
@@ -388,8 +397,9 @@ for x in configs/samples/*; do \
 done
 
 %pre
-getent group ${gname} >/dev/null || groupadd -r ${gname}
-getent passwd $au{name} >/dev/null || \
+getent group ${gname} >/dev/null || \
+    groupadd -r ${gname}
+getent passwd ${uname} >/dev/null || \
     useradd -r -g ${gname} -d %{_localstatedir}/lib/asterisk -s /sbin/nologin \
     -c "Asterisk PBX" ${uname}
 exit 0

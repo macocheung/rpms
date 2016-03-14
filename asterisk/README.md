@@ -86,9 +86,15 @@ Open up the firewall for Asterisk and Apache
 [root@pbx]# firewall-cmd --reload
 ```
 
-That should do it.  Now adjust the configs in _/etc/asterisk/_.  Pull samples
-from _/usr/share/doc/asterisk-*/configs/_ for other config files not installed
-already.  Get to the console like so:
+Configure DHCP for the phones.  See [here](DHCP.md).
+
+Now you need to adjust the Asterisk configs in _/etc/asterisk_.  Edit
+```pjsip_wizard.conf``` to setup your SIP trunks and extensions users.  Edit
+```voicemail.conf``` to create voicemail boxes.  Edit ```extensions.conf```
+to adjust the dialplan.  They all should be commented to explain the needed
+changes.
+
+That should do it.  Get to the console like so:
 ```
 [root@pbx]# asterisk -rvvv
 Asterisk 13.7.2, Copyright (C) 1999 - 2014, Digium, Inc. and others.
@@ -115,7 +121,7 @@ svr1*CLI>
   that are enabled.  ULAW and G722 are enabled by default.  Call _rpmbuild_
   with _--define "ulaw 0"_ to disable ULAW.  Replace _ulaw_ with _wav_, _alaw_,
   _gsm_, _g722_, _g729_, _sln16_, _siren7_, or _siren14_ for other formats.
-  Replace the _0_ with _1_ to enable them.
+  Replace the _0_ with _1_ to enable them. i.e. ```rpmbuild -ba asterisk.spec --define "wav 1"```
 * __Polycom Phones__ - We use Polycom phones so we include the firmware and
   boot files in this package.  We use _phoneprov_ to provision them.
 * __Non-Root__ - We run Asterisk as the _asterisk_ user rather than _root_

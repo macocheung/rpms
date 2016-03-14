@@ -70,9 +70,10 @@ BuildRequires:	systemd
 BuildRequires:	unixODBC-devel
 BuildRequires:	uuid-devel
 
+Requires(pre):		shadow-utils
 Requires(post):		systemd
 Requires(preun):	systemd
-Requires(postun):	systemd
+Requires(postun):	systemd shadow-utils
 
 %description
 Asterisk is an open source framework for building communications applications.
@@ -166,14 +167,21 @@ done
 %{__rm} -rf %{buildroot}%{_localstatedir}/spool/asterisk/voicemail/default/1234
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.ael %{buildroot}%{_sysconfdir}/asterisk/extensions.ael.sample
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.lua %{buildroot}%{_sysconfdir}/asterisk/extensions.lua.sample
-%{__install} -d -m0775 %{buildroot}%{_localstatedir}/log/asterisk/polycom/
-%{__install} -Dp -m0644 ${SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
-%{__install} -Dp -m0644 ${SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
-%{__install} -Dp -m0644 ${SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
-%{__install} -d -m0755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/
+%{__install} -d -m 775 %{buildroot}%{_localstatedir}/log/asterisk/polycom/
+%{__install} -Dp -m 644 ${SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
+%{__install} -Dp -m 644 ${SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
+%{__install} -Dp -m 644 ${SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
+%{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/
 for x in configs/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/$x"
 done
+
+%pre
+getent group ${name} >/dev/null || groupadd -r ${name}
+getent passwd ${name} >/dev/null || \
+    useradd -r -g ${name} -d %{_localstatedir}/lib/asterisk -s /sbin/nologin \
+    -c "Asterisk PBX" ${name}
+exit 0
 
 %post
 %{__chgrp} apache %{buildroot}%{_localstatedir}/log/asterisk/polycom/
@@ -181,6 +189,8 @@ done
 
 %preun
 %systemd_preun asterisk.service
+getent group ${name} >/dev/null && groupdel %{name}
+getent passwd ${name} >/dev/null && userdel %{name}
 
 %postun
 %systemd_postun_with_restart asterisk.service

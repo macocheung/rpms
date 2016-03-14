@@ -168,9 +168,9 @@ done
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.ael %{buildroot}%{_sysconfdir}/asterisk/extensions.ael.sample
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.lua %{buildroot}%{_sysconfdir}/asterisk/extensions.lua.sample
 %{__install} -d -m 775 %{buildroot}%{_localstatedir}/log/asterisk/polycom/
-%{__install} -Dp -m 644 ${SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
-%{__install} -Dp -m 644 ${SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
-%{__install} -Dp -m 644 ${SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
+%{__install} -Dp -m 644 %{SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
+%{__install} -Dp -m 644 %{SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
+%{__install} -Dp -m 644 %{SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
 %{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/
 for x in configs/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/$x"

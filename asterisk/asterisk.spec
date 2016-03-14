@@ -152,7 +152,7 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 %make_install install-logrotate samples
-%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
+%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}/asterisk.service
 %{__install} -Dp -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
 %{__install} -d %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/

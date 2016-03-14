@@ -1,5 +1,13 @@
-# $Id$
-# https://github.com/pdugas/rpms/master/asterisk/asterisk.spec
+# -----------------------------------------------------------------------------
+# ASTERISK-RPM - RPMs for Asterisk
+# Copyright (C) 2016 Paul Dugas.  All rights reserved.
+# -----------------------------------------------------------------------------
+# Package   RPMS
+# File      asterisk/asterisk.spec
+# Brief     RPM Spec File for Asterisk
+# Author    Paul Dugas <paul@dugas.cc>
+# URL       https://github.com/pdugas/rpms/tree/master/asterisk
+# -----------------------------------------------------------------------------
 
 Name:		asterisk
 Version:	13.7.2
@@ -19,6 +27,10 @@ Source5:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound
 Source6:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound-g722-current.tar.gz
 Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.service
 Source8:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/sounds.custom.README
+Source9:	http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_3_1_8_legacy_release_sig_split.zip
+Source10:	http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_vvx_BootROM_4_1_4_release_sig.zip
+Source11:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/httpd-asterisk.conf
+Source12:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-favicon.ico
 
 BuildRequires:	bison
 BuildRequires:	curl-devel
@@ -30,6 +42,7 @@ BuildRequires:	git
 BuildRequires:	gmime-devel
 BuildRequires:	gsm-devel
 BuildRequires:	gtk2-devel
+BuildRequires:	httpd
 BuildRequires:	iksemel-devel
 BuildRequires:	jansson-devel
 BuildRequires:	libical-devel
@@ -40,6 +53,8 @@ BuildRequires:	libuuid-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	lua-devel
+BuildRequires:  mariadb-server
+BuildRequires:  mysql-connector-odbc
 BuildRequires:	ncurses-devel
 BuildRequires:	neon-devel
 BuildRequires:	net-snmp-devel
@@ -142,9 +157,19 @@ rm -rf $RPM_BUILD_ROOT
 %{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
 %{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
+%{__mkdir} -p %{buildroot}%{_localstatedir}/spool/asterisk/sounds/en/
 for x in phoneprov/*; do \
   %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov
 done
+%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
+%{__unzip} %{SOURCE9} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneproc/configs/
+%{__unzip} %{SOURCE10} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneproc/configs/
+%{__rm} -rf %{buildroot}%{_localstatedir}/spool/asterisk/voicemail/default/1234
+%{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.ael %{buildroot}%{_sysconfdir}/asterisk/extensions.ael.sample
+%{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.lua %{buildroot}%{_sysconfdir}/asterisk/extensions.lua.sample
+%{__mkdir} -p -m0775 -g apache %{buildroot}%{_localstatedir}/log/asterisk/polycom/
+%{__install} -Dp -m0644 ${SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
+%{__install} -Dp -m0644 ${SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
 
 %post
 %systemd_post asterisk.service
@@ -163,6 +188,7 @@ done
 %dir %{_sysconfdir}/asterisk/
 %config(noreplace) %{_sysconfdir}/asterisk/*
 %config(noreplace) %{_sysconfdir}/logrotate.d/asterisk
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/asterisk.conf
 %{_libdir}/libasteriskssl.so.*
 %dir %{_libdir}/asterisk/
 %dir %{_libdir}/asterisk/modules/
@@ -183,7 +209,10 @@ done
 #%{_localstatedir}/lib/asterisk/keys/*
 %dir %{_localstatedir}/lib/asterisk/moh
 %dir %{_localstatedir}/lib/asterisk/phoneprov
-%config(noreplace) %{_localstatedir}/lib/asterisk/phoneprov/*
+%dir %{_localstatedir}/lib/asterisk/phoneprov/configs
+%{_localstatedir}/lib/asterisk/phoneprov/configs/*
+%config(noreplace) %{_localstatedir}/lib/asterisk/phoneprov/*.xml
+%config(noreplace) %{_localstatedir}/lib/asterisk/phoneprov/*.cfg
 %dir %{_localstatedir}/lib/asterisk/rest-api
 %{_localstatedir}/lib/asterisk/rest-api/*
 %dir %{_localstatedir}/lib/asterisk/sounds
@@ -205,18 +234,19 @@ done
 %dir %{_localstatedir}/lib/asterisk/static-http
 %{_localstatedir}/lib/asterisk/static-http/*
 %dir %{_localstatedir}/log/asterisk/
-%ghost %{_localstatedir}/log/asterisk/debug
-%ghost %{_localstatedir}/log/asterisk/security
-%ghost %{_localstatedir}/log/asterisk/console
-%ghost %{_localstatedir}/log/asterisk/messages
-%ghost %{_localstatedir}/log/asterisk/full
+%dir %{_localstatedir}/log/asterisk/polycom/
+#%ghost %{_localstatedir}/log/asterisk/debug
+#%ghost %{_localstatedir}/log/asterisk/security
+#%ghost %{_localstatedir}/log/asterisk/console
+#%ghost %{_localstatedir}/log/asterisk/messages
+#%ghost %{_localstatedir}/log/asterisk/full
 %dir %{_localstatedir}/log/asterisk/cdr-csv/
-%ghost %{_localstatedir}/log/asterisk/cdr-csv/Master.csv
+#%ghost %{_localstatedir}/log/asterisk/cdr-csv/Master.csv
 %dir %{_localstatedir}/log/asterisk/cdr-custom/
 %dir %{_localstatedir}/log/asterisk/cel-custom/
 %dir %{_localstatedir}/run/asterisk/
-%ghost %{_localstatedir}/run/asterisk/asterisk.ctl
-%ghost %{_localstatedir}/run/asterisk/asterisk.pid
+#%ghost %{_localstatedir}/run/asterisk/asterisk.ctl
+#%ghost %{_localstatedir}/run/asterisk/asterisk.pid
 %dir %{_localstatedir}/spool/asterisk/
 %{_localstatedir}/spool/asterisk/*
 
@@ -242,3 +272,6 @@ done
 %changelog
 * Mon Feb 29 2016 Paul Dugas <paul@dugas.cc> 13.7.2-1
 - Initial RPM release.
+
+# -----------------------------------------------------------------------------
+# EOF

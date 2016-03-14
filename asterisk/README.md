@@ -6,20 +6,22 @@ what customizations I've included.
 
 ## Building the RPM
 
-Start with a physical or virtual machine with at least 2 CPUs, 2GB RAM, 10G
-drive, and an Ethernet LAN interface.
+Start with a physical or virtual machine with adequate resources for Asterisk.
+I typically use 2 CPUs, 2GB RAM, 10G drive, and an Ethernet LAN interface.  A
+second inteface exposed externally can also be added but I typically deploy
+behind a NAT'ing firewall and don't need it.
 
 Install CentOS-7 Minimal, configure a static network, configure NTP, install VM
 tools if necessary, disable selinux, install SSH keys, apply any pending
 updates and reboot.
 
-Next, we install some basics:
+Next, we install some basics.
 ```
 [root@pbx]# yum install -y deltarpm epel-release yum-cron firewalld
 [root@pbx]# yum install -y vim tcpdump bind-utils net-tools lsof bash-completion wget
 ```
 
-Then the necessary packaging tools:
+Then install the necessary packaging tools.
 ```
 [root@pbx]# yum install -y rpm-build redhat-rpm-config rpmdevtools yum-utils
 ```
@@ -87,16 +89,15 @@ svr1*CLI>
 ## Customizations
 
 * I've added a number of _BuildRequires_ entries to _asterisk.spec_ in order to
-  enable almost all of the optional modules with in Asterisk.  I've not enabled
+  enable almost all of the optional modules within Asterisk.  I've not enabled
   Dahdi or other components that rely on hardare and kernel-specific drivers
   since I want to be able to use the resulting packages on both virtual and
   physical machines. 
 * I like to keep my custom sound files separate from those included in the
-  distribution so I've added the _/var/lib/asterisk/sounds/custom/_ directory
-  where I keep them instead.
+  distribution so I've added the _/var/lib/asterisk/sounds/custom/_ directory.
 * I don't install the sound files via the stock build system.  Instead, I list
   them as sources in _asterisk.spec_ so they're downloaded with the Asterisk
   source.  Helps when I'm rebuilding often as I don't need to redownload them
   every time.  There looks to be support for a caching scheme in the makefile but
   I'm not seeing how to use it.
-
+* I include the firmware and configs for Polycom phones and setup PhoneProv.

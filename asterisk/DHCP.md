@@ -9,7 +9,6 @@ Directory in the office so we use Microsoft's DHCP server as described below.
 3.  Give the new policy a name on the _General_ tab.
 
     ![DHCP-General][DHCP-General]
-
 4.  Specify which clients the policy applies to on the _Conditions_ tab.
 
     ![DHCP-Conditions][DHCP-Conditions]
@@ -17,7 +16,6 @@ Directory in the office so we use Microsoft's DHCP server as described below.
 5.  Set the options to send on the _Options_ tab.
    
     ![DHCP-Options][DHCP-Options]
-
 6.  Save the new policy then boot the phones to test.
 
 [DHCP-General]: img/DHCP-General.png "DHCP Policy - General"

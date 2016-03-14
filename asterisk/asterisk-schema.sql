@@ -27,27 +27,27 @@
 -- Call Detail Records
 DROP TABLE IF EXISTS `cdr`; 
 CREATE TABLE `cdr` ( 
-      'accountcode' varchar(20), 
-      'src' varchar(80), 
-      'dst' varchar(80), 
-      'dcontext' varchar(80), 
-      'clid' varchar(80), 
-      'channel' varchar(80), 
-      'dstchannel' varchar(80), 
-      'lastapp' varchar(80), 
-      'lastdata' varchar(80), 
-      'start' datetime, 
-      'answer' datetime, 
-      'end' datetime, 
-      'duration' integer, 
-      'billsec' integer, 
-      'disposition' varchar(45), 
-      'amaflags' varchar(45), 
-      'userfield' varchar(1024), 
-      'uniqueid' varchar(150), 
-      'linkedid' varchar(150), 
-      'peeraccount' varchar(20), 
-      'sequence' integer 
+      `accountcode` varchar(20), 
+      `src` varchar(80), 
+      `dst` varchar(80), 
+      `dcontext` varchar(80), 
+      `clid` varchar(80), 
+      `channel` varchar(80), 
+      `dstchannel` varchar(80), 
+      `lastapp` varchar(80), 
+      `lastdata` varchar(80), 
+      `start` datetime, 
+      `answer` datetime, 
+      `end` datetime, 
+      `duration` integer, 
+      `billsec` integer, 
+      `disposition` varchar(45), 
+      `amaflags` varchar(45), 
+      `userfield` varchar(1024), 
+      `uniqueid` varchar(150), 
+      `linkedid` varchar(150), 
+      `peeraccount` varchar(20), 
+      `sequence` integer 
 ); 
 ALTER TABLE `cdr` ADD INDEX by_start_answer_end (start,answer,end); 
 ALTER TABLE `cdr` ADD INDEX by_src_dest (src,dst); 

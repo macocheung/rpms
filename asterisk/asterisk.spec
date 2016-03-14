@@ -25,7 +25,7 @@ Source3:	http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_3_1_8_legac
 Source4:	http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_vvx_BootROM_4_1_4_release_sig.zip
 Source5:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/httpd-asterisk.conf
 Source6:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-favicon.ico
-Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.sql
+Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-schema.sql
 
 BuildRequires:	bison
 BuildRequires:	curl-devel
@@ -381,7 +381,7 @@ done
 %{__install} -d -m 775 %{buildroot}%{_localstatedir}/log/asterisk/polycom/
 %{__install} -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
 %{__install} -Dp -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/www/html/favicon.ico
-%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
+%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk-schema.sql
 %{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/samples/
 for x in configs/samples/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/$x"

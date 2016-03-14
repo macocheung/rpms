@@ -6,27 +6,27 @@ what customizations I've included.
 
 ## Building the RPM
 
-Start with a physical or virtual machine with adequate resources for Asterisk.
-I typically use 2 CPUs, 2GB RAM, 10G drive, and an Ethernet LAN interface.  A
-second inteface exposed externally can also be added but I typically deploy
-behind a NAT'ing firewall and don't need it.
+1.  Start with a physical or virtual machine with adequate resources for Asterisk.
+    I typically use 2 CPUs, 2GB RAM, 10G drive, and an Ethernet LAN interface.  A
+    second inteface exposed externally can also be added but I typically deploy
+    behind a NAT'ing firewall and don't need it.
 
-Install CentOS-7 Minimal, configure a static network, configure NTP, install VM
-tools if necessary, disable selinux, install SSH keys, apply any pending
-updates and reboot.
+2.  Install CentOS-7 Minimal, configure a static network, configure NTP, install VM
+    tools if necessary, disable selinux, install SSH keys, apply any pending
+    updates and reboot.
 
-Next, we install some basics.
+3.  Next, we install some basics.
 ```
 [root@pbx]# yum install -y deltarpm epel-release yum-cron firewalld
 [root@pbx]# yum install -y vim tcpdump bind-utils net-tools lsof bash-completion wget
 ```
 
-Then install the necessary packaging tools.
+4.  Then install the necessary packaging tools.
 ```
 [root@pbx]# yum install -y rpm-build redhat-rpm-config rpmdevtools yum-utils
 ```
 
-Setup the build environment.  We never build RPMs as root, right?
+5.  Setup the build environment.  We never build RPMs as root, right?
 ```
 [root@pbx]# useradd build
 [root@pbx]# su - build
@@ -38,12 +38,12 @@ Setup the build environment.  We never build RPMs as root, right?
 [root@pbx]#
 ```
 
-Install the dependencies.  You can run this while the sources are being downloaded.
+6.  Install the dependencies.  You can run this while the sources are being downloaded.
 ```
 [root@pbx]# yum-builddep -y ~build/rpmbuild/SPECS/asterisk.spec 
 ```
 
-Now build the RPMs:
+7.  Now build the RPMs:
 ```
 [root@pbx]# su - build
 [build@pbx]$ rpmbuild -ba rpmbuild/SPECS/asterisk.spec
@@ -51,33 +51,54 @@ Now build the RPMs:
 [build@pbx]$ exit
 ```
 
-Install them.  Not that this will make sure _httpd_ and _mariadb-server_ are
-installed as well since our setup depends on them.
+8.  Install them.  Not that this will make sure _httpd_ and _mariadb-server_ are
+    installed as well since our setup depends on them.
 ```
 [root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-13.7.2-*.rpm
 [root@pbx]# yum localinstall ~build/rpmbuild/RPMS/x86_64/asterisk-sounds-*.rpm
 ```
 
-Create the database and schema.  Change _secret_ to something appropriate.
-```
-[root@pbx]# mysql 
-MariaDB [(none)]> CREATE DATABASE asterisk;
-MariaDB [(none)]> GRANT ALL ON asterisk.* to 'asterisk' IDENTIFIED BY 'secret';
-MariaDB [(none)]> CTRL-D
-[root@pbx]# mysql < /usr/doc/asterisk-*/asterisk-schema.sql
-```
-
-Enable and start Asterisk, Apache, and MariaDB.
+9.  Enable and start Apache, and MariaDB.
 ```
 [root@pbx]# systemctl enable httpd
 [root@pbx]# systemctl enable mariadb
-[root@pbx]# systemctl enable asterisk
 [root@pbx]# systemctl start httpd
 [root@pbx]# systemctl start mariadb
+```
+
+10. Create the database and schema.  Change _secret_ to something appropriate.
+```
+[root@pbx]# mysql 
+MariaDB [(none)]> CREATE DATABASE asterisk;
+MariaDB [(none)]> CREATE USER 'asterisk'@'localhost' IDENTIFIED BY 'secret';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON asterisk.* TO 'asterisk'@'localhost';
+MariaDB [(none)]> FLUSH PRIVILEGES;
+MariaDB [(none)]> EXIT;
+[root@pbx]# mysql -u asterisk -p asterisk < /usr/share/doc/asterisk-*/asterisk-schema.sql
+Password: 
+[root@pbx]# 
+```
+
+11. Setup the ODBC connection to the database.  Create ```/etc/odbc.ini``` as below.
+```
+[asterisk]
+Driver=MySQL
+Database=asterisk
+Server=localhost
+port=3306
+Socket=/var/lib/mysql/mysql.sock
+```
+
+13. Edit _/etc/asterisk/res_odbc.conf_ and change the _password_ setting in the
+_[asterisk]_ section to whatever database password you used above in step 10.
+
+14. Enable and start Asterisk.
+```
+[root@pbx]# systemctl enable asterisk
 [root@pbx]# systemctl start asterisk
 ```
 
-Open up the firewall for Asterisk and Apache
+15. Open up the firewall for Asterisk and Apache
 ```
 [root@pbx]# firewall-cmd --zone=public --add-port=80/tcp --permanent 
 [root@pbx]# firewall-cmd --zone=public --add-port=443/tcp --permanent 
@@ -86,9 +107,9 @@ Open up the firewall for Asterisk and Apache
 [root@pbx]# firewall-cmd --reload
 ```
 
-Configure DHCP for the phones.  See [here](DHCP.md).
+16. Configure DHCP for the phones.  See [here](DHCP.md).
 
-Now you need to adjust the Asterisk configs in _/etc/asterisk_.  Edit
+17. Now you need to adjust the Asterisk configs in _/etc/asterisk_.  Edit
 ```pjsip_wizard.conf``` to setup your SIP trunks and extensions users.  Edit
 ```voicemail.conf``` to create voicemail boxes.  Edit ```extensions.conf```
 to adjust the dialplan.  They all should be commented to explain the needed

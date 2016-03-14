@@ -111,11 +111,11 @@ svr1*CLI>
   we use the resulting RPMs.
 * __Custom Sounds__ - We keep custom sounds separate from the stock sound
   files.  Use the _/var/lib/asterisk/sounds/custom/_ directory for these.
-* __Sound Packages__ - The Spec File is setup to download the MOH, Core, and
-  Extra sound file packages as sources rather than using Asterisk's build
-  system.  This is just a convenience for us as we develop these scripts.
-  We combine the MOH, Core, and Extra sound files into a single RPM for each
-  format.  We currently only use uLaw and G.722.
+* __Sound Packages__ - We build _asterisk-sounds-en-*_ packages for formats
+  that are enabled.  ULAW and G722 are enabled by default.  Call _rpmbuild_
+  with _--define "ulaw 0"_ to disable ULAW.  Replace _ulaw_ with _wav_, _alaw_,
+  _gsm_, _g722_, _g729_, _sln16_, _siren7_, or _siren14_ for other formats.
+  Replace the _0_ with _1_ to enable them.
 * __Polycom Phones__ - We use Polycom phones so we include the firmware and
   boot files in this package.  We use _phoneprov_ to provision them.
 * __Non-Root__ - We run Asterisk as the _asterisk_ user rather than _root_
@@ -124,3 +124,5 @@ svr1*CLI>
 * __systemd Support__ - We include a service definition to start/stop Asterisk
   using systemd since this is the standard for Redhat these days.
 
+--
+Paul Dugas <paul@dugas.cc>

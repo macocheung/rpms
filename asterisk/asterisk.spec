@@ -19,19 +19,13 @@ URL:		http://www.asterisk.org
 License:	GPL
 
 Source0:	http://downloads.digium.com/pub/asterisk/releases/asterisk-%{version}.tar.gz
-Source1:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-en-ulaw-current.tar.gz
-Source2:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-en-g722-current.tar.gz
-Source3:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-extra-sounds-en-ulaw-current.tar.gz
-Source4:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-extra-sounds-en-g722-current.tar.gz
-Source5:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound-ulaw-current.tar.gz
-Source6:	http://downloads.asterisk.org/pub/telephony/sounds/asterisk-moh-opsound-g722-current.tar.gz
-Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.service
-Source8:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/sounds.custom.README
-Source9:	http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_3_1_8_legacy_release_sig_split.zip
-Source10:	http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_vvx_BootROM_4_1_4_release_sig.zip
-Source11:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/httpd-asterisk.conf
-Source12:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-favicon.ico
-Source13:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.sql
+Source1:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.service
+Source2:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/sounds.custom.README
+Source3:	http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_3_1_8_legacy_release_sig_split.zip
+Source4:	http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_vvx_BootROM_4_1_4_release_sig.zip
+Source5:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/httpd-asterisk.conf
+Source6:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-favicon.ico
+Source7:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.sql
 
 BuildRequires:	bison
 BuildRequires:	curl-devel
@@ -79,6 +73,18 @@ Requires(postun):	systemd shadow-utils
 %define uname %{name}
 %define gname %{name}
 
+%define with_dahdi %{?dahdi}%{?!dahdi:0}
+
+%define with_wav %{?wav}%{!?wav:0}
+%define with_ulaw %{?ulaw}%{!?ulaw:1}
+%define with_alaw %{?alaw}%{!?alaw:0}
+%define with_gsm %{?gsm}%{!?gsm:0}
+%define with_g729 %{?g729}%{!?g729:0}
+%define with_g722 %{?g722}%{!?g722:1}
+%define with_sln16 %{?sln16}%{!?sln16:0}
+%define with_siren7 %{?siren7}%{!?siren7:0}
+%define with_siren14 %{?siren14}%{!?siren14:0}
+
 %description
 Asterisk is an open source framework for building communications applications.
 Asterisk turns an ordinary computer into a communications server. Asterisk
@@ -102,6 +108,25 @@ Asterisk is sponsored by Digium.  See http://asterisk.org/.
 
 This package contains static libraries and header files need for development.
 
+%if "%{with_wav}" == "1"
+%package sounds-en-wav
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-wav
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using WAV.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_ulaw}" == "1"
 %package sounds-en-ulaw
 Summary:       Sound files for the Asterisk software PBX
 Group:         System/Telephony
@@ -117,7 +142,45 @@ Asterisk is sponsored by Digium.  See http://asterisk.org/.
 
 This package contains English Asterisk sound files encoded using μ-law (G.711).
 It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
 
+%if "%{with_alaw}" == "1"
+%package sounds-en-alaw
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-alaw
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using aLaw (G.711).
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_gsm}" == "1"
+%package sounds-en-gsm
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-gsm
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using GSM.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_g722}" == "1"
 %package sounds-en-g722
 Summary:       Sound files for the Asterisk software PBX
 Group:         System/Telephony
@@ -133,6 +196,79 @@ Asterisk is sponsored by Digium.  See http://asterisk.org/.
 
 This package contains English Asterisk sound files encoded using G.722.
 It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_g729}" == "1"
+%package sounds-en-g729
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-g729
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using G.729.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_sln16}" == "1"
+%package sounds-en-sln16
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-sln16
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using SLN16.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_siren7}" == "1"
+%package sounds-en-siren7
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-siren7
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using SIREN7.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
+
+%if "%{with_siren14}" == "1"
+%package sounds-en-siren14
+Summary:       Sound files for the Asterisk software PBX
+Group:         System/Telephony
+Requires:      %{name} = %{version}-%{release}
+
+%description sounds-en-siren14
+Asterisk is an open source framework for building communications applications.
+Asterisk turns an ordinary computer into a communications server. Asterisk
+powers IP PBX systems, VoIP gateways, conference servers and other custom
+solutions. It is used by small businesses, large businesses, call centers,
+carriers and government agencies, worldwide. Asterisk is free and open source.
+Asterisk is sponsored by Digium.  See http://asterisk.org/.
+
+This package contains English Asterisk sound files encoded using SIREN17.
+It is a combination of Asterisk's Core, Extra, and MOH sound packages.
+%endif
 
 %prep
 %setup -q
@@ -141,40 +277,111 @@ It is a combination of Asterisk's Core, Extra, and MOH sound packages.
 %configure
 contrib/scripts/get_mp3_source.sh
 make menuselect.makeopts
-menuselect/menuselect \
-    --disable CORE-SOUNDS-EN-GSM \
-    --disable MOH-OPSOUND-WAV \
-    --enable chan_ooh323 \
-    --enable app_fax \
-    --enable format_mp3
+MENUSELECT_OPTS="--enable chan_ooh323 --enable app_fax --enable format_mp3"
+%if %{with_wav}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-WAV"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-WAV"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-WAV"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-WAV"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-WAV"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-WAV"
+%endif
+%if %{with_ulaw}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-ULAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-ULAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-ULAW"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-ULAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-ULAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-ULAW"
+%endif
+%if %{with_alaw}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-ALAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-ALAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-ALAW"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-ALAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-ALAW"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-ALAW"
+%endif
+%if %{with_gsm}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-GSM"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-GSM"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-GSM"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-GSM"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-GSM"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-GSM"
+%endif
+%if %{with_g722}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-G722"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-G722"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-G722"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-G722"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-G722"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-G722"
+%endif
+%if %{with_g729}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-G729"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-G729"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-G729"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-G729"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-G729"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-G729"
+%endif
+%if %{with_sln16}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-SLN16"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-SLN16"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-SLN16"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-SLN16"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-SLN16"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-SLN16"
+%endif
+%if %{with_siren7}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-SIREN7"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-SIREN7"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-SIREN7"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-SIREN7"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-SIREN7"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-SIREN7"
+%endif
+%if %{with_siren14}
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable CORE-SOUNDS-EN-SIREN14"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable EXTRA-SOUNDS-EN-SIREN14"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --enable MOH-OPSOUND-SIREN14"
+%else
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable CORE-SOUNDS-EN-SIREN14"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable EXTRA-SOUNDS-EN-SIREN14"
+  MENUSELECT_OPTS="$MENUSELECT_OPTS --disable MOH-OPSOUND-SIREN14"
+%endif
+menuselect/menuselect $MENUSELECT_OPTS
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install install-logrotate samples
-%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}/asterisk.service
-%{__install} -Dp -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
+%make_install SOUNDS_CACHE_DIR=$RPM_SOURCE_DIR install-logrotate samples
+%{__install} -Dp -m 644 %{SOURCE1} %{buildroot}%{_unitdir}/asterisk.service
+%{__install} -Dp -m 644 %{SOURCE2} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
 %{__install} -d %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
-%{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
 %{__install} -d %{buildroot}%{_localstatedir}/spool/asterisk/sounds/en/
 for x in phoneprov/*; do \
   %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov
 done
 %{__install} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
-%{__unzip} %{SOURCE9} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
-%{__unzip} %{SOURCE10} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
+%{__unzip} %{SOURCE3} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
+%{__unzip} %{SOURCE4} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
 %{__rm} -rf %{buildroot}%{_localstatedir}/spool/asterisk/voicemail/default/1234
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.ael %{buildroot}%{_sysconfdir}/asterisk/extensions.ael.sample
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.lua %{buildroot}%{_sysconfdir}/asterisk/extensions.lua.sample
 %{__install} -d -m 775 %{buildroot}%{_localstatedir}/log/asterisk/polycom/
-%{__install} -Dp -m 644 %{SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
-%{__install} -Dp -m 644 %{SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
-%{__install} -Dp -m 644 %{SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
+%{__install} -Dp -m 644 %{SOURCE5} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
+%{__install} -Dp -m 644 %{SOURCE6} %{buildroot}%{_localstatedir}/www/html/favicon.ico
+%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
 %{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/samples/
 for x in configs/samples/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/$x"
@@ -215,7 +422,7 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %{_mandir}/man8/*
 %{_unitdir}/asterisk.service
 %attr(-  , %{uname}, %{gname}) %dir %{_localstatedir}/lib/asterisk/
-%ghost %{_localstatedir}/lib/asterisk/astdb.sqlite3
+%attr(644, %{uname}, %{gname}) %ghost %{_localstatedir}/lib/asterisk/astdb.sqlite3
 %dir %{_localstatedir}/lib/asterisk/agi-bin
 %dir %{_localstatedir}/lib/asterisk/documentation
 %{_localstatedir}/lib/asterisk/documentation/*
@@ -267,17 +474,104 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %{_includedir}/asterisk/*
 %{_libdir}/libasteriskssl.so
 
+%if %{with_wav}
+%files sounds-en-wav
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*wav
+%{_localstatedir}/lib/asterisk/sounds/en/*wav
+%{_localstatedir}/lib/asterisk/sounds/en/*/*wav
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-wav-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-wav-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-wav-*
+%endif
+
+%if %{with_ulaw}
 %files sounds-en-ulaw
 %defattr(-,root,root)
 %{_localstatedir}/lib/asterisk/moh/*ulaw
 %{_localstatedir}/lib/asterisk/sounds/en/*ulaw
 %{_localstatedir}/lib/asterisk/sounds/en/*/*ulaw
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-ulaw-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-ulaw-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-ulaw-*
+%endif
 
+%if %{with_alaw}
+%files sounds-en-alaw
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*alaw
+%{_localstatedir}/lib/asterisk/sounds/en/*alaw
+%{_localstatedir}/lib/asterisk/sounds/en/*/*alaw
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-alaw-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-alaw-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-alaw-*
+%endif
+
+%if %{with_gsm}
+%files sounds-en-gsm
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*gsm
+%{_localstatedir}/lib/asterisk/sounds/en/*gsm
+%{_localstatedir}/lib/asterisk/sounds/en/*/*gsm
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-gsm-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-gsm-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-gsm-*
+%endif
+
+%if %{with_g722}
 %files sounds-en-g722
 %defattr(-,root,root)
 %{_localstatedir}/lib/asterisk/moh/*g722
 %{_localstatedir}/lib/asterisk/sounds/en/*g722
 %{_localstatedir}/lib/asterisk/sounds/en/*/*g722
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-g722-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-g722-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-g722-*
+%endif
+
+%if %{with_g729}
+%files sounds-en-g729
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*g729
+%{_localstatedir}/lib/asterisk/sounds/en/*g729
+%{_localstatedir}/lib/asterisk/sounds/en/*/*g729
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-g729-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-g729-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-g729-*
+%endif
+
+%if %{with_sln16}
+%files sounds-en-sln16
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*sln16
+%{_localstatedir}/lib/asterisk/sounds/en/*sln16
+%{_localstatedir}/lib/asterisk/sounds/en/*/*sln16
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-sln16-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-sln16-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-sln16-*
+%endif
+
+%if %{with_siren7}
+%files sounds-en-siren7
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*siren7
+%{_localstatedir}/lib/asterisk/sounds/en/*siren7
+%{_localstatedir}/lib/asterisk/sounds/en/*/*siren7
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-siren7-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-siren7-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-siren7-*
+%endif
+
+%if %{with_siren14}
+%files sounds-en-siren14
+%defattr(-,root,root)
+%{_localstatedir}/lib/asterisk/moh/*siren14
+%{_localstatedir}/lib/asterisk/sounds/en/*siren14
+%{_localstatedir}/lib/asterisk/sounds/en/*/*siren14
+%{_localstatedir}/lib/asterisk/moh/.asterisk-moh-opsound-siren14-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-core-sounds-en-siren14-*
+%{_localstatedir}/lib/asterisk/sounds/en/.asterisk-extra-sounds-en-siren14-*
+%endif
 
 %changelog
 * Mon Feb 29 2016 Paul Dugas <paul@dugas.cc> 13.7.2-1

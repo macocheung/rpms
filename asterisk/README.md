@@ -16,10 +16,10 @@ what customizations I've included.
     updates and reboot.
 
 3.  Next, we install some basics.
-```
-[root@pbx]# yum install -y deltarpm epel-release yum-cron firewalld
-[root@pbx]# yum install -y vim tcpdump bind-utils net-tools lsof bash-completion wget
-```
+    ```
+    [root@pbx]# yum install -y deltarpm epel-release yum-cron firewalld
+    [root@pbx]# yum install -y vim tcpdump bind-utils net-tools lsof bash-completion wget
+    ```
 
 4.  Then install the necessary packaging tools.
 ```

@@ -75,6 +75,9 @@ Requires(post):		systemd
 Requires(preun):	systemd
 Requires(postun):	systemd shadow-utils
 
+%define uname %{name}
+%define gname %{name}
+
 %description
 Asterisk is an open source framework for building communications applications.
 Asterisk turns an ordinary computer into a communications server. Asterisk
@@ -172,7 +175,7 @@ done
 %{__install} -Dp -m 644 %{SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
 %{__install} -Dp -m 644 %{SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
 %{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/
-for x in configs/*; do \
+for x in configs/samples/*; do \
   %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/$x"
 done
 
@@ -184,7 +187,6 @@ getent passwd ${name} >/dev/null || \
 exit 0
 
 %post
-%{__chgrp} apache %{buildroot}%{_localstatedir}/log/asterisk/polycom/
 %systemd_post asterisk.service
 
 %preun
@@ -211,7 +213,7 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %{_sbindir}/*
 %{_mandir}/man8/*
 %{_unitdir}/asterisk.service
-%dir %{_localstatedir}/lib/asterisk/
+%attr(-  , %{uname}, %{gname}) %dir %{_localstatedir}/lib/asterisk/
 %dir %{_localstatedir}/lib/asterisk/agi-bin
 #%{_localstatedir}/lib/asterisk/agi-bin/*
 %dir %{_localstatedir}/lib/asterisk/documentation
@@ -248,21 +250,13 @@ getent passwd ${name} >/dev/null && userdel %{name}
 %dir %{_localstatedir}/lib/asterisk/sounds/en/wx
 %dir %{_localstatedir}/lib/asterisk/static-http
 %{_localstatedir}/lib/asterisk/static-http/*
-%dir %{_localstatedir}/log/asterisk/
-%dir %{_localstatedir}/log/asterisk/polycom/
-#%ghost %{_localstatedir}/log/asterisk/debug
-#%ghost %{_localstatedir}/log/asterisk/security
-#%ghost %{_localstatedir}/log/asterisk/console
-#%ghost %{_localstatedir}/log/asterisk/messages
-#%ghost %{_localstatedir}/log/asterisk/full
-%dir %{_localstatedir}/log/asterisk/cdr-csv/
-#%ghost %{_localstatedir}/log/asterisk/cdr-csv/Master.csv
-%dir %{_localstatedir}/log/asterisk/cdr-custom/
-%dir %{_localstatedir}/log/asterisk/cel-custom/
-%dir %{_localstatedir}/run/asterisk/
-#%ghost %{_localstatedir}/run/asterisk/asterisk.ctl
-#%ghost %{_localstatedir}/run/asterisk/asterisk.pid
-%dir %{_localstatedir}/spool/asterisk/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/log/asterisk/
+%attr(770, -       , apache  ) %dir %{_localstatedir}/log/asterisk/polycom/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/log/asterisk/cdr-csv/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/log/asterisk/cdr-custom/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/log/asterisk/cel-custom/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/run/asterisk/
+%attr(750, %{uname}, %{gname}) %dir %{_localstatedir}/spool/asterisk/
 %{_localstatedir}/spool/asterisk/*
 
 %files devel

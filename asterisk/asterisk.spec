@@ -31,6 +31,7 @@ Source9:	http://downloads.polycom.com/voice/voip/sp_ss_sip/spip_ssip_3_1_8_legac
 Source10:	http://downloads.polycom.com/voice/voip/sp_ss_bootrom/spip_ssip_vvx_BootROM_4_1_4_release_sig.zip
 Source11:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/httpd-asterisk.conf
 Source12:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk-favicon.ico
+Source13:	https://raw.githubusercontent.com/pdugas/rpms/master/asterisk/asterisk.sql
 
 BuildRequires:	bison
 BuildRequires:	curl-devel
@@ -146,30 +147,29 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 %make_install install-logrotate samples
-%{__mkdir} -p %{buildroot}%{_unitdir}/
-%{__install} -D -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/
-%{__install} -D -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
+%{__install} -Dp -m 644 %{SOURCE7} %{buildroot}%{_unitdir}
+%{__install} -Dp -m 644 %{SOURCE8} %{buildroot}%{_localstatedir}/lib/asterisk/sounds/custom/README
+%{__install} -d %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE1} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE2} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE3} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE4} -C %{buildroot}%{_localstatedir}/lib/asterisk/sounds/en/
 %{__tar} -xf %{SOURCE5} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
 %{__tar} -xf %{SOURCE6} -C %{buildroot}%{_localstatedir}/lib/asterisk/moh/
-%{__mkdir} -p %{buildroot}%{_localstatedir}/spool/asterisk/sounds/en/
+%{__install} -d %{buildroot}%{_localstatedir}/spool/asterisk/sounds/en/
 for x in phoneprov/*; do \
   %{__install} -m 644 "$x" %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov
 done
-%{__mkdir} -p %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
-%{__unzip} %{SOURCE9} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneproc/configs/
-%{__unzip} %{SOURCE10} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneproc/configs/
+%{__install} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
+%{__unzip} %{SOURCE9} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
+%{__unzip} %{SOURCE10} -d %{buildroot}%{_localstatedir}/lib/asterisk/phoneprov/configs/
 %{__rm} -rf %{buildroot}%{_localstatedir}/spool/asterisk/voicemail/default/1234
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.ael %{buildroot}%{_sysconfdir}/asterisk/extensions.ael.sample
 %{__mv} %{buildroot}%{_sysconfdir}/asterisk/extensions.lua %{buildroot}%{_sysconfdir}/asterisk/extensions.lua.sample
-%{__mkdir} -p -m0775 -g apache %{buildroot}%{_localstatedir}/log/asterisk/polycom/
+%{__install} -d -m0775 -g apache %{buildroot}%{_localstatedir}/log/asterisk/polycom/
 %{__install} -Dp -m0644 ${SOURCE11} %{buildroot}%{_sysconfdir}/httpd/conf.d/asterisk.conf
 %{__install} -Dp -m0644 ${SOURCE12} %{buildroot}%{_localstatedir}/www/html/favicon.ico
+%{__install} -Dp -m0644 ${SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
 
 %post
 %systemd_post asterisk.service

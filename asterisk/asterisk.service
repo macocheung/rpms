@@ -1,8 +1,8 @@
 [Unit]
-Description=Asterisk PBX and telephony daemon
+Description=Asterisk PBX
 Documentation=man:asterisk(8)
-Wants=network.target
-After=network.target
+Wants=network.target syslog.target httpd.service mariadb.service
+After=network.target syslog.target httpd.service mariadb.service
 
 [Service]
 Type=forking

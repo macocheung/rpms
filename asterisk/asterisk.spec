@@ -43,7 +43,6 @@ BuildRequires:	git
 BuildRequires:	gmime-devel
 BuildRequires:	gsm-devel
 BuildRequires:	gtk2-devel
-BuildRequires:	httpd
 BuildRequires:	iksemel-devel
 BuildRequires:	jansson-devel
 BuildRequires:	libical-devel
@@ -54,8 +53,7 @@ BuildRequires:	libuuid-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	libxml2-devel
 BuildRequires:	lua-devel
-BuildRequires:  mariadb-server
-BuildRequires:  mysql-connector-odbc
+BuildRequires:	mysql-connector-odbc
 BuildRequires:	ncurses-devel
 BuildRequires:	neon-devel
 BuildRequires:	net-snmp-devel
@@ -69,6 +67,9 @@ BuildRequires:	sqlite-devel
 BuildRequires:	systemd
 BuildRequires:	unixODBC-devel
 BuildRequires:	uuid-devel
+
+Requires:	httpd
+Requires:	mariadb-server
 
 Requires(pre):		shadow-utils
 Requires(post):		systemd
@@ -176,7 +177,7 @@ done
 %{__install} -Dp -m 644 %{SOURCE13} %{buildroot}%{_datadir}/doc/%{name}-%{version}/asterisk.sql
 %{__install} -d -m 755 %{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/samples/
 for x in configs/samples/*; do \
-  %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/configs/$x"
+  %{__install} -m 644 "$x" "%{buildroot}%{_datadir}/doc/%{name}-%{version}/$x"
 done
 
 %pre
